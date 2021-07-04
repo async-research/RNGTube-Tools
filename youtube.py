@@ -33,11 +33,12 @@ class YouTubeAPI:
         request = self.youtube.search().list(
             part="snippet",
             maxResults=max_count,
-            order="rating",
+            order="date",
             publishedAfter=published_after,
             q=query,
             regionCode="US",
             relevanceLanguage="en",
+            event_type='completed',
             safeSearch="none",
             type="video",
             videoCaption="any", 
