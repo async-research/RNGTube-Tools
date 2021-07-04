@@ -38,7 +38,7 @@ class YouTubeAPI:
             q=query,
             regionCode="US",
             relevanceLanguage="en",
-            event_type='completed',
+            eventType='completed',
             safeSearch="none",
             type="video",
             videoCaption="any", 
