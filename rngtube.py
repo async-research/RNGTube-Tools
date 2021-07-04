@@ -6,6 +6,7 @@ import random
 import mysql.connector
 import argparse
 import time
+import datetime
 import textwrap
 from dotenv import load_dotenv
 from os import getenv
@@ -121,14 +122,15 @@ def surf_youtube(conn,row_cnt,table_name):
     queries = ""
     success = 0 
     requests_max = 1000
-  
+    now = datetime.datetime.now()
+    fiveDaysago = now - datetime.timedelta(hours=120, minites=0)
     for i in range(0,requests_max):
         word = random.choice(words)  
         queries += word + " "
         print("             Word=> "+word, end="\r")
         
         try:
-            df = yt.search(word,None,max_count=50)
+            df = yt.search(word,fiveDaysago,max_count=50)
         except:
             print("---------------------------RECEIPT-----------------------------")
             print('Successfully added (' + str(success) + ') new records to ' + table_name + '.')
