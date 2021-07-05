@@ -123,14 +123,14 @@ def surf_youtube(conn,row_cnt,table_name):
     success = 0 
     requests_max = 1000
     now = datetime.datetime.now()
-    fiveDaysago = now - datetime.timedelta(hours=120, minutes=0)
+    aWeekago = now - datetime.timedelta(hours=720, minutes=0)
     for i in range(0,requests_max):
         word = random.choice(words)  
         queries += word + " "
-        print("             Word=> "+word, end="\r")
+        print("             Word=> "+word + " ", end="\r")
         
         try:
-            df = yt.search(word,fiveDaysago,max_count=50)
+            df = yt.search(word,aWeekago,max_count=50)
         except:
             print("---------------------------RECEIPT-----------------------------")
             print('Successfully added (' + str(success) + ') new records to ' + table_name + '.')
