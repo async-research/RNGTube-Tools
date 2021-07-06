@@ -33,18 +33,19 @@ class YouTubeAPI:
         request = self.youtube.search().list(
             part="snippet",
             maxResults=max_count,
-            order="date",
+            order=random.choice(["date","rating","relevance","title","viewCount"]),
             publishedAfter=published_after,
             q=query,
             regionCode="US",
             relevanceLanguage="en",
             eventType='completed',
-            safeSearch="none",
+            safeSearch="moderate",
             type="video",
             videoCaption="any", 
-            videoDuration=random.choice(['short','medium']),
-            videoDefinition="high",
+            videoDuration=random.choice(['short','medium','long','any']),
+            videoDefinition=random.choice(["high","any"]),
             videoEmbeddable="true",
+            videoLicense=random.choice(["any","creativeCommon","youtube"]),
             videoSyndicated="true"
         )
         return self.parse_search(request.execute(),query)
