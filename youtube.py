@@ -3,12 +3,10 @@
     Provides YouTube APIv3 Functionality via Python. 
     Returns a DataFrame when searching YouTube. 
 """
-
+import datetime, random
+import pandas as pd
 import googleapiclient.discovery
 import googleapiclient.errors
-import pandas as pd
-import datetime
-import random
 
 class YouTubeAPI:
     def __init__(self,developerKey):
@@ -75,8 +73,9 @@ class YouTubeAPI:
                 Pandas Dataframe of Video info and meta data. 
         '''
         if response !=[]:
-            columns = ['videoID','title','description','channelTitle','channelID','thumbnail','publishTime',\
-                        'categoryID','viewCount','likeCount', 'dislikeCount','commentCount','query']
+            columns = ['videoID','title','description','channelTitle','channelID','thumbnail',\
+                'publishTime', 'categoryID','viewCount','likeCount', 'dislikeCount','commentCount',\
+                'query']
             items = []
             for item in response['items']:
                 video_data = self.parse_video(item)
@@ -126,16 +125,18 @@ class YouTubeAPI:
                33:"Classics",34:"Comedy",35:"Documentary",36:"Drama",\
                37:"Family",38:"Foreign",39:"Horror",40:"Sci-Fi-n-Fantasy",\
                41:"Thriller",42:"Shorts",43:"Shows",44:"Trailers"}
-        stats = {'categoryID':'-404','viewCount':'-404', 'likeCount':'-404','dislikeCount':'-404','commentCount':'-404'}
+        stats = {'categoryID':'-404','viewCount':'-404', 'likeCount':'-404','dislikeCount':'-404',\
+                 'commentCount':'-404'}
         try:
             stats['categoryID'] = cat_dct[int(meta['items'][0]['snippet']['categoryId'])]
 
         except:
-            print('SYSTEM WARNING!: Category not found in dictionary, using categoryID (' +  meta['items'][0]['snippet']['categoryId'] + ').')
+            print('SYSTEM WARNING!: Category not found in dictionary, using categoryID (' +\
+                  meta['items'][0]['snippet']['categoryId'] + ').')
             stats['categoryID'] = meta['items'][0]['snippet']['categoryId']
 
         for stat in meta['items'][0]['statistics'].keys():
             if stat in stats.keys():
                 stats[stat] = meta['items'][0]['statistics'][stat]
 
-        return [stats[data] for data in ['categoryID', 'viewCount', 'likeCount', 'dislikeCount', 'commentCount']]
+        return [stats[data] for data in stats.keys()]

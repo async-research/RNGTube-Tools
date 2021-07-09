@@ -2,12 +2,7 @@
 """
     Creates a collage of thumbnails with top rated videos from RNGTube Database.
 """
-
-import wget
-import mysql.connector
-import os
-import glob
-import time
+import os, glob, time, wget, mysql.connector
 from PIL import Image, ImageFilter
 from dotenv import load_dotenv
 from os import getenv
@@ -71,6 +66,7 @@ def create_background(dir_path, save_dir):
 
 
 def main():
+    print("Generating RNGTUBE.COM BACKGROUND IMAGE".center(65,"+"))
     load_dotenv()
     dir_path = os.getcwd()
     save_dir = '/var/www/html/rngtube.com/images'
@@ -85,4 +81,6 @@ def main():
         )
     download_thumbnails(conn,dir_path)
     create_background(dir_path, save_dir)
-main()
+    print("".center(65,"+"))
+if __name__ == "__main__":
+    main()
