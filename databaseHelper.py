@@ -45,7 +45,7 @@ def insert_record(conn,df,rng):
         cursor.execute(query, vals)
 
     except mysql.connector.Error as err:
-        print("Something went wrong: {}".format(err))
+        print(f"\033[91m ERROR!: {err}\033[00m".center(80," "))
         return 0
     else:
         conn.commit()

@@ -7,6 +7,8 @@ from PIL import Image, ImageFilter
 from dotenv import load_dotenv
 from os import getenv
 
+PADDING = 100 
+
 def download_thumbnails(conn,dir_path,table_name='videos'):
     image_files = glob.glob(dir_path + "/images/*.jpg")
     width=320
@@ -28,7 +30,6 @@ def download_thumbnails(conn,dir_path,table_name='videos'):
             print(e)
         else:
             time.sleep(.2)
-            print(img_filename)
             cnt += 1 
 
 def create_background(dir_path, save_dir):
@@ -58,6 +59,7 @@ def create_background(dir_path, save_dir):
             break
     assert cnt == 100
     main.save(save_dir + '/toplikes.jpg')
+    print()
     print('Saved collage to ' + save_dir + '/toplikes.jpg')
 
     for img_file in image_files:
@@ -66,7 +68,7 @@ def create_background(dir_path, save_dir):
 
 
 def main():
-    print("Generating RNGTUBE.COM BACKGROUND IMAGE".center(65,"+"))
+    print("Generating-RNGTUBE.COM-BACKGROUND-IMAGE".center(100, "@"))
     load_dotenv()
     dir_path = os.getcwd()
     save_dir = '/var/www/html/rngtube.com/images'
@@ -81,6 +83,6 @@ def main():
         )
     download_thumbnails(conn,dir_path)
     create_background(dir_path, save_dir)
-    print("".center(65,"+"))
+    print("".center(PADDING,"@"))
 if __name__ == "__main__":
     main()

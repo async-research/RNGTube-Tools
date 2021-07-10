@@ -6,7 +6,10 @@ from os import getenv
 from dotenv import load_dotenv
 from youtube import YouTubeAPI
 import databaseHelper as db
-import random, time, datetime, argparse, mysql.connector, background_gen
+import random, time, datetime, argparse, mysql.connector,googleapiclient.errors, background_gen,textwrap
+
+PADDING = 100
+
 
 def surf_youtube(conn,row_cnt,table_name):
     queries = ""
@@ -16,39 +19,49 @@ def surf_youtube(conn,row_cnt,table_name):
     cnt = db.get_count(conn, table_name)
     words = [word.strip() for word in open('wordLists/discordServerWrds_memes.txt','r').readlines()]
     aMonthago = datetime.datetime.now() - datetime.timedelta(hours=720, minutes=0)
+    print("SEARCHING".center(PADDING,"%"))
+    print()
     for i in range(0,requests_max): 
         q= random.choice(words) + "|" + random.choice(words) + "|" + random.choice(words)  + "|" + \
            random.choice(words) + "|" + random.choice(words) + "|" + random.choice(words) 
         queries += q + " "
-        print(f"Searching=>  {q} ".center(65," "))
+        print(q.center(PADDING," "))
         
         try:
             df = yt.search(q,None,max_count=50)
 
-        except:
-            padding = 65
+        except Exception as err:
+            print()
+            print("".center(PADDING,"%"))
             report= ""
-            report += "SUMMARY".center(padding, "*") + "\n"
-            report += f"Successfully added ({str(success)}) new records to {table_name}".center(padding, " ") + "\n"
-            report += f"Record Total: {str(row_cnt+success)}\n".center(padding) + "\n"
-            report += "".center(padding,"*")
+            report += "SUMMARY".center(PADDING, "*") + "\n"
+            report += f"Successfully added ({str(success)}) new records to {table_name}".center(PADDING, " ") + "\n"
+            report += f"Record Total: {str(row_cnt+success)}\n".center(PADDING) + "\n"
+            report += "".center(PADDING,"*")
             print(report)
-            print("END-OF-LINE".center(padding,"*"))
-            raise 
+            print("END MESSAGE".center(PADDING,"!"))
+            twrap = textwrap.TextWrapper(width = PADDING-20)
+            info = twrap.wrap(str(err))
+            print()
+            for line in info:
+                print(line.center(PADDING, " "))
+            print()
+            print("".center(PADDING,"!"))
+            background_gen.main()
+            print("DONE".center(PADDING," "))
+            break
 
         else:
             for i in range(0,len(df.index)):
                 if db.select_record(conn,df.loc[i,'videoID']) == []:
                     success += db.insert_record(conn,df,i)
-          
-            
+  
 def print_head(database_name, table_name):
     logo  = open('logo.txt','r').read()
-    logo_len = len(max(open('logo.txt','r').readlines()))
     report =''
-    report = "".center(logo_len,"=") + "\n"
-    report += f'Database: {database_name}'.center(logo_len," ") + "\n"
-    report += f'  Table: {table_name}'.center(logo_len," ") + "\n"
+    report = "".center(PADDING,"=") + "\n"
+    report += f'Database: {database_name}'.center(PADDING," ") + "\n"
+    report += f'  Table: {table_name}'.center(PADDING," ") + "\n"
     print(logo)
     print(report)
 
@@ -87,7 +100,7 @@ def main():
         db.trim_table(conn,table_name)
     else:
         surf_youtube(conn,row_cnt,table_name)
-        background_gen.main()
+       
 
 if __name__ == '__main__':
     main()
