@@ -14,7 +14,7 @@ PADDING = 100
 def download_file(url,addendum="", path="", pb=False):
     file_name = url.split("/")[-1]
     if addendum != "":
-        file_name = file_name + "_" + addendum
+        file_name =  addendum + '_' + file_name
     response = requests.get(url, stream=True)
     with open(f"{path}{file_name}","wb") as f:
         with tqdm(
@@ -24,7 +24,7 @@ def download_file(url,addendum="", path="", pb=False):
                 for chunk in response.iter_content(chunk_size=1024):
                     f.write(chunk)
                     pbar.update(len(chunk))
-
+                    
 def download_thumbnails(conn,dir_path,table_name='videos'):
     width=320
     height=180
